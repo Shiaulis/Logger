@@ -7,18 +7,8 @@
 
 import Foundation
 
-public enum LoggerModule {
-    case dataParser, mainViewModel, dataMapper, ratingService, purchases
-
-    fileprivate var name: String {
-        switch self {
-        case .dataParser: return "🔎 Data Parser"
-        case .mainViewModel: return "🧑‍🔧 Main View Model"
-        case .dataMapper: return "💿 Data Mapper"
-        case .ratingService: return "✨ Rating Service"
-        case .purchases: return "💰 Purchases"
-        }
-    }
+public protocol LoggerModule {
+    var name: String { get }
 }
 
 public protocol Logger {
