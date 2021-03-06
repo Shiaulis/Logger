@@ -11,18 +11,26 @@ public protocol LoggerModule {
     var name: String { get }
 }
 
+public extension LoggerModule {
+    var name: String { String(describing: Self.self) }
+}
+
 public protocol Logger {
 
-    func log(message: String, error: Error, module: LoggerModule)
-    func logNotImplemented(functionality: String, module: LoggerModule)
-    func log(information: String, module: LoggerModule)
-    func log(successState: String, module: LoggerModule)
+    init(loggerModule: LoggerModule)
+
+    func log(message: String, error: Error)
+    func logNotImplemented(functionality: String)
+    func log(information: String)
+    func log(successState: String)
 
 }
 
 public final class PrintLogger {
 
-    public init() {}
+    // MARK: - Properties
+
+    private let module: LoggerModule
 
     private var currentDate: String {
         let dateFormatter = DateFormatter()
@@ -31,6 +39,14 @@ public final class PrintLogger {
         return dateFormatter.string(from: Date())
     }
 
+    // MARK: - Init
+
+    public init(loggerModule: LoggerModule) {
+        self.module = loggerModule
+    }
+
+
+
     private func log(_ string: String) {
         print("\(self.currentDate): \(string)")
     }
@@ -38,20 +54,20 @@ public final class PrintLogger {
 
 extension PrintLogger: Logger {
 
-    public func log(message: String, error: Error, module: LoggerModule) {
+    public func log(message: String, error: Error) {
         log("❌ \(module.name): \(message) Error: \(error.localizedDescription)")
         assertionFailure()
     }
 
-    public func logNotImplemented(functionality: String, module: LoggerModule) {
+    public func logNotImplemented(functionality: String) {
         log("🚧 \(module.name): \(functionality) not implemented yet")
     }
 
-    public func log(information: String, module: LoggerModule) {
+    public func log(information: String) {
         log("ℹ️ \(module.name): \(information)")
     }
 
-    public func log(successState: String, module: LoggerModule) {
+    public func log(successState: String) {
         log("✅ \(module.name): \(successState)")
     }
 
